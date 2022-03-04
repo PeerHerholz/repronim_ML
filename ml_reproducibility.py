@@ -1,6 +1,8 @@
 import json
 import os
 from pathlib import Path
+from joblib import dump
+
 import random
 from re import A
 import numpy as np
@@ -65,7 +67,7 @@ tf.random.set_seed(42)
 
 fit = model.fit(X_train, y_train, epochs=300, batch_size=20, validation_split=0.2)
 
-score, acc = model.evaluate(X_test, y_test,
+score, acc_ann = model.evaluate(X_test, y_test,
                             batch_size=2)
 
 print('Results - random forest')
@@ -77,7 +79,14 @@ print('Accuracy = {}, MAE = {}, Chance = {}'.format(np.round(np.mean(acc), 3),
 print('Results - ANN')
 
 print('Test score:', score)
-print('Test accuracy:', acc)
+print('Test accuracy:', acc_ann)
 
 metrics = {"accuracy": np.round(np.mean(acc), 3), "MAE": np.round(np.mean(-mae), 3), "Chance": np.round(1/len(labels.unique()), 3),
-           "Test score": score, "Test accuracy": acc}
+           "Test score": score, "Test accuracy": acc_ann}
+
+accuracy_path = repo_path / "metrics.json"
+accuracy_path.write_text(json.dumps(metrics))
+
+dump(acc_val, repo_path / "random_forest.joblib")
+
+model.save(repo_path / "ANN.h5")
