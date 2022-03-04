@@ -23,11 +23,11 @@ data.shape
 
 labels = pd.read_csv('participants.csv')['AgeGroup']
 
-cv = StratifiedKFold()
+cv = StratifiedKFold(random_state=42, shuffle=True)
 
 pipe = make_pipeline(
     StandardScaler(),
-    RandomForestClassifier()
+    RandomForestClassifier(random_state=42)
 )
 
 acc_val = cross_validate(pipe, data, pd.Categorical(labels).codes, cv=cv, return_estimator =True)
@@ -35,6 +35,10 @@ acc = cross_val_score(pipe, data, pd.Categorical(labels).codes, cv=cv)
 mae = cross_val_score(pipe, data, pd.Categorical(labels).codes, cv=cv, 
                       scoring='neg_mean_absolute_error')
 
+
+os.environ['PYTHONHASHSEED'] = str(42)
+random.seed(42)
+np.random.seed(42)
 
 model = keras.Sequential()
 
@@ -57,6 +61,8 @@ model.compile(loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 X_train, X_test, y_train, y_test = train_test_split(data, pd.Categorical(labels).codes, test_size=0.2, shuffle=True, random_state=42)
+
+tf.random.set_seed(42)
 
 fit = model.fit(X_train, y_train, epochs=300, batch_size=20, validation_split=0.2)
 
