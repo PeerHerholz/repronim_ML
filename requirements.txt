@@ -1,5 +1,4 @@
-python==3.10
-tensorflow==2.7.0
+tensorflow==2.8.0
 seaborn==0.11.2
 datalad==0.15.6
 datalad-container==1.1.5
