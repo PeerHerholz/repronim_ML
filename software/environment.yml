@@ -223,4 +223,3 @@ dependencies:
     - whoosh==2.7.4
     - wrapt==1.13.3
     - yarl==1.7.2
-prefix: /Users/peerherholz/anaconda3/envs/repronim_ml
